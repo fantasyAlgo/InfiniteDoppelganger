@@ -5,6 +5,8 @@ class Skeleton(Enemy):
     def __init__(self, pos, uid, max_health=100) -> None:
         super().__init__(pos, uid, max_health)
         self.enemyType = 0
+        self.sprite_state = columnPositionEnemy(0, int(self.state/40), False, self.health-1)
+
 
 
     def update(self, players, dt, map, arrowHandler, enemies):

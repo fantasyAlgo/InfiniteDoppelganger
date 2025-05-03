@@ -1,5 +1,4 @@
 import math
-from typing import Never
 from numpy import pi
 import pyray as rl
 import random
@@ -65,13 +64,13 @@ class PlayerHandler:
     def addPlayer(self, info):
         pass
 
-    def update(self, info, free_islands=[]):
+    def update(self, info, dungeon, free_islands=[]):
         #print("info: ", info)
         for i in range(len(info)):
             tl = info[i]
             if tl["isMain"]:
                 if self.mainPlayer.health > tl["health"]:
-                    self.musicHandler.addDamage()
+                    self.musicHandler.add("damage")
                 self.mainPlayer.health = tl["health"]
                 self.mainPlayer.current_island = tl["current_island"]
 
@@ -87,16 +86,25 @@ class PlayerHandler:
             self.players[tl["uid"]].bowDirAngle = tl["bowDirAngle"]
             self.players[tl["uid"]].used = True
             self.players[tl["uid"]].current_island = tl["current_island"]
-        print(self.mainPlayer.current_island, free_islands)
-        if self.mainPlayer.current_island != 0:
+        #print(self.mainPlayer.current_island, free_islands)
+        if self.mainPlayer.current_island != 0 and dungeon.getType([self.mainPlayer.x, self.mainPlayer.y]) != 4:
             self.areDoorsClosed = self.mainPlayer.current_island in free_islands
+            dungeon.doorsClosed = self.areDoorsClosed
 
-    def updateMain(self, dt, dungeon : Dungeon, enemyHandler: EnemyHandler, particleSystem : ParticleSystem, musicHandler : MusicHandler, arrowHandler : ArrowHandler):
+    def updateMain(self, dt, dungeon : Dungeon, 
+                   enemyHandler: EnemyHandler, 
+                   particleSystem : ParticleSystem, 
+                   musicHandler : MusicHandler, 
+                   arrowHandler : ArrowHandler):
         dungeon.doorsClosed = self.areDoorsClosed
         #print("dt: ", dt)
         self.mainPlayer.move(dt, dungeon, particleSystem, musicHandler, arrowHandler)
         if self.mainPlayer.isSwinging:
             enemyHandler.takeHit([self.mainPlayer.x, self.mainPlayer.y], self.mainPlayer.lastDir, dt)
+        if enemyHandler.bossUid != None:
+            print("hjioufbfaejkioberjiofp")
+            musicHandler.add("shoutout")
+
     def drawUI(self, camera):
         self.mainPlayer.drawUI(camera)
 
@@ -308,7 +316,7 @@ class Player():
                         arrowHandler.isBoomerangActive = True
                     self.timeLastArrow = 0.0
                     if self.weapon == 0 or self.weapon == 2:
-                        musicHandler.addArrow()
+                        musicHandler.add("arrow")
                     for _ in range(100):
                         particleSystem.addParticle([self.x+dirs[self.lastDir][0]/3, self.y+dirs[self.lastDir][1]/3], dirs[self.lastDir])
 
@@ -325,7 +333,7 @@ class Player():
                 self.portalFunction = createPortalFunction([self.x, self.y], mousePos, self.lastDir)
                 self.portalDer = createPortalDerivative([self.x, self.y], mouse_pos, self.lastDir)
                 self.timePortal = 0
-                musicHandler.addWhoosh()
+                musicHandler.add("whoosh")
             
 
         if self.weapon in [0,2]:

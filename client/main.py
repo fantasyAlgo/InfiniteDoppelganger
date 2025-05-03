@@ -89,7 +89,7 @@ class Game:
         if not "enemies" in ps.keys():
             return
 
-        self.playerHandler.update(ps["players"], ps["free_islands"])
+        self.playerHandler.update(ps["players"], self.dungeon, ps["free_islands"])
         self.enemyHandler.update(ps["enemies"], dt)
         self.arrowsInfo = ps["arrows"]
 

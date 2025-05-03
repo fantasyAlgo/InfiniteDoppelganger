@@ -7,7 +7,7 @@ def get_local_ip():
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     return local_ip
-server_ip = "82.145.118.35" 
+server_ip = "127.0.0.1"#"82.145.118.35" 
 
 class Network:
     def __init__(self):

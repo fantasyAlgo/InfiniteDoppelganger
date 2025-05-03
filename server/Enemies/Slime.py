@@ -8,6 +8,8 @@ class Slime(Enemy):
         self.enemyType = 1
         self.jumpDirection = [-10000, -10000]
         self.attackTime = 0
+        self.sprite_state = columnPositionEnemy(0, int(self.state/20), False, self.health-1)
+
 
 
     def update(self, players, dt, map, arrowHandler, enemies):

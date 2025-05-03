@@ -9,6 +9,7 @@ import random
 class EnemyHandler:
     def __init__(self) -> None:
         self.enemies = {}
+        self.bossUid = None
 
     def draw(self, camera, particleSystem : ParticleSystem):
         uidsToDelete = []
@@ -38,6 +39,8 @@ class EnemyHandler:
             self.enemies[tl["uid"]].dir = tl["dir"]
             self.enemies[tl["uid"]].used = True
             self.enemies[tl["uid"]].damageTaken -= dt*4
+            if tl["enemyType"] == 2:
+                self.bossUid = tl["uid"]
 
 
     def takeHit(self, pos, dir, dt):

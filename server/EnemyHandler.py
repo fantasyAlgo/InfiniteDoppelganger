@@ -58,6 +58,7 @@ class EnemyHandler:
         self.enemies = {}
         self.islands = []
         self.centers = []
+        self.islands_id = []
         self.bossIsland = []
 
         self.loadMap("map3.npy")
@@ -103,17 +104,20 @@ class EnemyHandler:
         self.islands = []
         visited = np.zeros(self.map.shape, dtype=bool)
         mapInts = np.zeros(self.map.shape, dtype=int)
+        n_islands = 0
 
         for i in range(self.map.shape[0]):
             for j in range(self.map.shape[1]):
                 if not visited[i][j] and self.map[i][j] == 3:
-                    islands, spawnPoint = blocksWith1(self.map, visited, [i, j], mapInts, len(self.islands))
+                    n_islands += 1
+                    islands, spawnPoint = blocksWith1(self.map, visited, [i, j], mapInts, n_islands)
                     if spawnPoint == 0:
                         continue
                     if spawnPoint == 1:
                         self.bossIsland = islands
                         continue
                     self.islands.append(islands)
+                    self.islands_id.append(n_islands)
                     if len(self.islands[-1]) < 50:
                         self.islands = self.islands[:-1]
                     else:
@@ -168,7 +172,9 @@ class EnemyHandler:
                 transPos = [player.pos[0]*100/block_width, player.pos[1]*100/block_height]
                 dist = math.sqrt((transPos[0]-pos[0])**2 + (transPos[1]-pos[1])**2)
                 if dist < 30 and len(self.islands[i]) > 1:
-                    self.unfreePlaces.append(i)
+                    id = int(self.mapInts[self.islands[i][0][0]][self.islands[i][0][1]]) #self.islands_id[i]
+                    self.unfreePlaces.append(id)
+                    #print("ahahsahhahahas: ", self.unfreePlaces)
                     self.generation(self.islands[i])
                     self.islands[i] = []
                     self.centers[i] = [10000000, 10000000]
@@ -180,7 +186,7 @@ class EnemyHandler:
         self.checkIfNeedGeneration(players)
         active_islands = []
         for player in players.values():
-            transPos = [player.pos[0]*100/block_width, player.pos[1]*100/block_height]
+            transPos = [player.pos[0]*100/block_width, player.pos[1]*100/block_height + 0.5]
             player.current_island = int(self.mapInts[int(transPos[0]), int(transPos[1])])
             active_islands.append(player.current_island)
 

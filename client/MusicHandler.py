@@ -3,32 +3,34 @@ from Settings import *
 
 class MusicHandler:
     def __init__(self) -> None:
+        self.soundEffects = {}
+        def load_sound(name, path, volume=0.4):
+            sound = rl.load_sound(path)
+            rl.set_sound_volume(sound, volume)
+            self.soundEffects[name] = sound
+
         self.backgroundMusic = rl.load_music_stream(str(baseDir / "music" / "part2.wav"))
         self.inGameMusic = rl.load_music_stream(str(baseDir / "music" / "part3.wav"))
-        self.arrowSound = rl.load_sound(str(baseDir / "music" / "arrowWent2.wav"))
-        self.gameOverSound = rl.load_sound(str(baseDir / "music" / "gameOver2.mp3"))
-        self.whooshSound = rl.load_sound(str(baseDir / "music" / "whoosh.mp3"))
-        self.damageSound = rl.load_sound(str(baseDir / "music" / "damageSound.mp3"))
+        load_sound("arrow", str(baseDir / "music" /         "arrowWent2.wav"), 0.3)
+        load_sound("gameOver", str(baseDir / "music" /       "gameOver2.wav"), 0.6)
+        load_sound("whoosh", str(baseDir / "music" /            "whoosh.mp3"), 0.2)
+        load_sound("damage", str(baseDir / "music" /       "damageSound.mp3"), 0.4)
+        load_sound("shoutout", str(baseDir / "music" /        "shoutout.wav"), 0.8)
         self.currentSong = 0
         rl.set_music_volume(self.backgroundMusic, 0.5)
         rl.set_music_volume(self.inGameMusic, 0.5)
-        rl.set_sound_volume(self.whooshSound, 0.2)
-        rl.set_sound_volume(self.damageSound, 0.4)
 
         rl.play_music_stream(self.backgroundMusic)
     def stopUIAndPlay(self):
         #rl.stop_audio_stream(self.backgroundMusic)
         self.currentSong = 1
         rl.play_music_stream(self.inGameMusic)
-    def addArrow(self):
-        rl.play_sound(self.arrowSound)
+    def add(self, name):
+        rl.play_sound(self.soundEffects[name])
+
     def addGameOver(self):
-        rl.play_sound(self.gameOverSound)
+        self.add("gameOver")
         self.currentSong = 2
-    def addWhoosh(self):
-        rl.play_sound(self.whooshSound)
-    def addDamage(self):
-        rl.play_sound(self.damageSound)
 
 
 

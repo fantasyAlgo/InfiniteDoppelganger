@@ -8,6 +8,8 @@ class Knight(Enemy):
         self.enemyType = 4
         self.health = 80
         self.directFight = False
+        self.sprite_state = columnPositionKhight(0, int(self.state/20), True, self.health-1)
+
 
 
     def update(self, players, dt, map, arrowHandler, enemies):
@@ -38,7 +40,7 @@ class Knight(Enemy):
 
             if arrowHandler.canShoot(self.uid) and self.timeShot > 1:
                 if minDistance > 2.5:
-                    if faceDir == 1:
+                    if faceDir != 1:
                         arrowHandler.add(self.uid, [self.pos[0], self.pos[1]], [-1, 1], 5)
                         arrowHandler.add(self.uid, [self.pos[0], self.pos[1]], [1, -1], 5)
                     else:
