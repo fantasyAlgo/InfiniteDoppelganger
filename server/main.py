@@ -67,6 +67,7 @@ def game_loop():
         # Update game logic (independent of networking)
         enemyHandler.updateEnemies(playerHandlder.players, dt)
         enemyHandler.updateArrows(dt, playerHandlder.players)
+        playerHandlder.update(dt)
 
         time.sleep(max(0, TICK_DURATION - (time.time() - now)))
 
@@ -77,11 +78,11 @@ def server_loop():
         try:
             #print("⏳ Waiting for data...")
             reply, addr = s.recvfrom(16384)
-            uid = addr[0]
+            uid = addr[1]
             if not uid in playerHandlder.players.keys():
                 print("Idiot with addr: ", addr, " is here")
                 playerHandlder.addPlayer(uid)
-
+            playerHandlder.players[uid].time = 0
             # Attempt to parse JSON
             try:
                 reply = msgpack.unpackb(reply, raw=False) #json.loads(reply)
@@ -109,7 +110,11 @@ def server_loop():
             #playerData["free_islands"] = enemyHandler.unfreePlaces
 
 
-            response = msgpack.packb({"players": playerData, "enemies" : enemyData, "arrows" : arrowsData, "free_islands" : enemyHandler.unfreePlaces}, use_bin_type = True)
+            response = msgpack.packb({"uid" : uid, 
+                                      "players": playerData, 
+                                      "enemies" : enemyData, 
+                                      "arrows" : arrowsData, 
+                                      "free_islands" : enemyHandler.unfreePlaces}, use_bin_type = True)
             s.sendto(response, addr)  # convert to json string
 
         except Exception as e:

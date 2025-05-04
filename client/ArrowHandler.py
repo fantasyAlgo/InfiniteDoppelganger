@@ -8,6 +8,7 @@ class ArrowHandler:
     def __init__(self) -> None:
         self.isBoomerangActive = False
         self.prevInfo = {}
+        self.playerId = ""
 
     def draw(self, camera, info, particleSystem : ParticleSystem):
         if self.prevInfo != info:
@@ -48,7 +49,8 @@ class ArrowHandler:
             texture = TextureHandler.get("vomitBall")
             color = (40, 83, 10)
         elif arrow["foe"] == 7:
-            self.isBoomerangActive = True
+            if arrow["ownerId"] == self.playerId:
+                self.isBoomerangActive = True
             texture = TextureHandler.get("boomerang")
             color = (193, 154, 107)
             usedAngle += arrow["time"]*400

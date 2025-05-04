@@ -189,6 +189,15 @@ class BoomerangArrow(GenericArrow):
             usedDir = [df*self.dir[0], df*self.dir[1]]
         self.pos = [self.pos[0]+usedDir[0]*dt*2.0, self.pos[1]+usedDir[1]*dt*2.0]
 
+    def getInfo(self, pid):
+        return {"pid" : pid, 
+                "pos" : [round(self.pos[0], 2), round(self.pos[1], 2)], 
+                "dir" : [round(self.dir[0], 2), round(self.dir[1], 2)], 
+                "foe" : self.foe + int(self.whichFoe), 
+                "time" : round(self.time, 3),
+                "ownerId" : self.ownerId
+                }
+
 class CompleteRotationArrow(GenericArrow):
     def __init__(self, pos, dir, maxDistance=5, whichFoe=False, ownerId=-1, needsSpiral = True) -> None:
         super().__init__(pos, dir, maxDistance, whichFoe, ownerId)
