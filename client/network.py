@@ -7,7 +7,7 @@ def get_local_ip():
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     return local_ip
-server_ip = "195.94.145.91" #"127.0.0.1"#"82.145.118.35" 
+server_ip = "127.0.0.1" # Localhost, specify your address here if you're using another server
 
 class Network:
     def __init__(self):
@@ -18,10 +18,8 @@ class Network:
         self.addr = (self.server, self.port)
         #self.id = self.connect()
         self.pos = (0, 0)
-    def start(self):
-        print("bakaddd")
-        #self.id = self.connect()
-        #print("id: ", self.id)
+    def start(self): # Not needed in a UDP based game
+        pass 
     def stop(self):
         pass
 
