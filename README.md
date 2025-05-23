@@ -1,4 +1,4 @@
-# InfiniteDoppleganger
+# InfiniteDoppelganger
 ![infiniteDoppleganger](https://github.com/user-attachments/assets/43a69b55-0dfc-4d67-8c68-1b5eadb3bdfe)
 ### A demo of a UDP-based multiplayer MMO, made with python3 and raylib
 ### -- By default the client uses the localhost IP (127.0.0.1), if you want to use someone's server, you need to specify it (in the client/network.py file). --
