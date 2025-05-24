@@ -76,14 +76,14 @@ def server_loop():
     #global s
     while True:
         try:
-            #print("⏳ Waiting for data...")
+            #print(" Waiting for data...")
             reply, addr = s.recvfrom(16384)
             uid = addr[1]
             if not uid in playerHandlder.players.keys():
                 print("Idiot with addr: ", addr, " is here")
                 playerHandlder.addPlayer(uid)
             playerHandlder.players[uid].time = 0
-            # Attempt to parse JSON
+            # Attempt to parse msgpack 
             try:
                 reply = msgpack.unpackb(reply, raw=False) #json.loads(reply)
             except msgpack.exceptions.UnpackException as e:

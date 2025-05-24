@@ -4,14 +4,11 @@ from Settings import *
 
 INIT_PARTICLE_SIZE = 6
 LIFETIME = 0.3
-
 class ParticleSystem:
     def __init__(self, lifetime=0.2) -> None:
         self.spawners = []
         self.particles = []
         self.lifetime = lifetime
-    def addParticleSpawn(self, pos, time=4):
-        pass
     def addParticle(self, pos, dir, scaleA=0.125, baseColor = (125, 125,125,255)):
         #n = random.randint(0,255)
         #scaleA = 0.125
@@ -37,32 +34,6 @@ class ParticleSystem:
     def draw(self, camera):
         for particle in self.particles:
             particle.draw(camera)
-
-
-
-
-
-class ParticleSpawner:
-    def __init__(self, pos, time=2, dir = [0,0,0]) -> None:
-        self.particles = []
-        self.startTime = 0
-        self.pos = pos
-        self.endTime = time
-        self.dir = dir
-
-    def update(self, dt):
-        takeColor = lambda x : (x, x, x, 255)
-        if self.startTime < self.endTime:
-            self.particles.append(Particle(self.pos, takeColor(random.randint(0,255)), self.dir))
-        toDelete = []
-        for i in range(len(self.particles)):
-            particle = self.particles[i]
-            particle.update()
-            if particle.lifetime > 0.6:
-                toDelete.append(i)
-        for index in toDelete:
-            toDelete.pop(index)
-        self.startTime += dt
 
 
 class Particle:
