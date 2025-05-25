@@ -51,8 +51,10 @@ def str2Pos(str_pos):
 playerHandlder = PlayerHandlder()
 enemyHandler = EnemyHandler()
 
-
 import threading
+player_lock = threading.Lock()
+enemy_lock = threading.Lock()
+arrow_lock = threading.Lock()
 
 def game_loop():
     TICK_RATE = 60  # 60 ticks per second
@@ -65,9 +67,12 @@ def game_loop():
         last_time = now
 
         # Update game logic (independent of networking)
-        enemyHandler.updateEnemies(playerHandlder.players, dt)
-        enemyHandler.updateArrows(dt, playerHandlder.players)
-        playerHandlder.update(dt)
+        with enemy_lock:
+            enemyHandler.updateEnemies(playerHandlder.players, dt)
+        with arrow_lock:
+            enemyHandler.updateArrows(dt, playerHandlder.players)
+        with player_lock:
+            playerHandlder.update(dt)
 
         time.sleep(max(0, TICK_DURATION - (time.time() - now)))
 
@@ -93,11 +98,15 @@ def server_loop():
 
             playerReply = reply["player"][0]
             if reply["type"] != "START":
-                playerHandlder.updateData(uid, playerReply)
-                enemyHandler.updateHealth(reply["enemies"])
+                with player_lock:
+                    playerHandlder.updateData(uid, playerReply)
+                with enemy_lock:
+                    enemyHandler.updateHealth(reply["enemies"])
                 if playerReply["weapon"] in [0,2] and playerReply["isThrowing"] and enemyHandler.arrowHandler.canShoot(uid):
-                    enemyHandler.arrowHandler.add(uid, [playerReply["x"], playerReply["y"]], 
-                                                  [playerReply["dir"][0]*1.5, playerReply["dir"][1]*1.5], weapon2Arrow[playerReply["weapon"]], uid)
+                    with arrow_lock:
+                        enemyHandler.arrowHandler.add(uid, [playerReply["x"], playerReply["y"]], 
+                                                      [playerReply["dir"][0]*1.5, playerReply["dir"][1]*1.5], 
+                                                      weapon2Arrow[playerReply["weapon"]], uid)
             elif reply["type"] == "STOP":
                 continue
             else:
@@ -115,7 +124,7 @@ def server_loop():
                                       "enemies" : enemyData, 
                                       "arrows" : arrowsData, 
                                       "free_islands" : enemyHandler.unfreePlaces}, use_bin_type = True)
-            s.sendto(response, addr)  # convert to json string
+            s.sendto(response, addr)  # convert to string
 
         except Exception as e:
             print("Error occurred:", e)
@@ -128,8 +137,6 @@ server_loop()
 #while True:
 #    continue
 
-
-
 #start_new_thread(threaded_client, (conn, currentplayer))
 '''
 currentplayer = 0
@@ -139,7 +146,6 @@ while True:
     start_new_thread(threaded_client, (conn, currentplayer))
     currentplayer += 1
 '''
-
 
 
 

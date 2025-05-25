@@ -23,8 +23,8 @@ class Network:
     def stop(self):
         pass
 
-    def connect(self):
-        '''
+    def connect(self): # Used when i was using TCP, useless now
+        ''' 
         try:
             self.client.connect(self.addr)
             return msgpack.unpackb(self.client.recv(8192), raw=False) #self.client.recv(8192).decode()
@@ -55,7 +55,7 @@ class Network:
             return None  # Return None if an error occurs
 
 
-
+# Testing 
 if __name__ == "__main__":
     network = Network()
     network.connect()
