@@ -7,7 +7,7 @@
 2. Go to the **server** directory
 3. python3 main.py, it should automatically map your IP address server side.
 4. In the main.py of the client, you need to specify your IP.
-#### If you want to play with people with a different connection, you need to stop your router to block outsider connctions
+#### If you want to play with people with a different connection, you need to stop your router from blocking outsider connctions
 ## Features
 - This is a demo, so **do not take this game seriously**.
 - The objective of the game is to defeat the final boss.
